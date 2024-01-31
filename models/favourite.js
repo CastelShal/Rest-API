@@ -14,6 +14,4 @@ Favourite.init({
     },
 }, {sequelize, modelName: "favourites" });
 
-User.hasMany(Favourite, {foreignKey: "uid"})
-
 export default Favourite;
