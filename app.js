@@ -6,6 +6,8 @@ import Favourite from "./models/favourite.js";
 
 import userRouter from "./routes/users.js";
 import favRouter from "./routes/favourite.js";
+import Organizer from "./models/organiser.js";
+import Event from "./models/event.js";
 
 const app = express();
 const PORT = 3000;
@@ -32,6 +34,8 @@ async function initDB() {
         .then(async () => {
             await User.sync();
             await Favourite.sync();
+            await Organizer.sync();
+            await Event.sync();
 
             console.log("Model synced");
         })
