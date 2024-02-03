@@ -56,7 +56,7 @@ User.init(
       allowNull: true,
     },
   },
-  { sequelize }
+  { sequelize, timestamps: false }
 );
 
 export default User;

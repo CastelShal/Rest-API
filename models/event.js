@@ -1,7 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../connect.js";
-import Organizer from "./organiser.js";
 import Tags from "./tags.js";
+import Organizer from "./organiser.js";
 
 class Event extends Model {}
 
@@ -25,7 +25,7 @@ Event.init(
       allowNull: false,
       references: {
         model: Tags,
-        keys: "tagId",
+        key: "tagId",
       },
     },
     eventName: {
@@ -53,7 +53,7 @@ Event.init(
       allowNull: true,
     },
   },
-  { sequelize }
+  { sequelize, timestamps: false }
 );
 
 export default Event;

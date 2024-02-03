@@ -23,7 +23,7 @@ BookedEvents.init(
       },
     },
   },
-  { sequelize, modelName: "bookedEvents" }
+  { sequelize, modelName: "bookedEvents", timestamps: false }
 );
 
 export default BookedEvents;

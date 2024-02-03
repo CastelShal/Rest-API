@@ -1,13 +1,12 @@
 import express from "express";
 
 import { sequelize } from "./connect.js";
-import User from "./models/user.js";
-import Favourite from "./models/favourite.js";
-import Ticket from "./models/tickets.js";
 import Tag from "./models/tags.js";
+import User from "./models/user.js";
+import BookedEvents from "./models/bookedEvents.js";
 
 import userRouter from "./routes/users.js";
-import favRouter from "./routes/favourite.js";
+import bookEventsRouter from "./routes/bookedEvents.js";
 import Organizer from "./models/organiser.js";
 import Event from "./models/event.js";
 
@@ -20,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //router mounts
 app.use("/user", userRouter);
-app.use("/favourite", favRouter);
+app.use("/bookedEvents", bookEventsRouter);
 
 initialize();
 
@@ -36,11 +35,10 @@ async function initDB() {
     .authenticate()
     .then(async () => {
       await User.sync();
-      await Favourite.sync();
       await Organizer.sync();
-      await Event.sync();
-      await Ticket.sync();
       await Tag.sync();
+      await Event.sync();
+      await BookedEvents.sync();
 
       console.log("Model synced");
     })

@@ -14,7 +14,7 @@ Tag.init(
       primaryKey: true,
     },
   },
-  { sequelize, modelName: "tags" }
+  { sequelize, modelName: "tags", timestamps: false }
 );
 
 export default Tag;
