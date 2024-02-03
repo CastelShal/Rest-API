@@ -3,6 +3,8 @@ import express from "express";
 import { sequelize } from "./connect.js";
 import User from "./models/user.js";
 import Favourite from "./models/favourite.js";
+import Ticket from "./models/tickets.js";
+import Tag from "./models/tags.js";
 
 import userRouter from "./routes/users.js";
 import favRouter from "./routes/favourite.js";
@@ -18,29 +20,32 @@ app.use(express.urlencoded({ extended: true }));
 
 //router mounts
 app.use("/user", userRouter);
-app.use("/favourite",favRouter);
+app.use("/favourite", favRouter);
 
 initialize();
 
 async function initialize() {
-    await initDB();
-    app.listen(PORT, () => {
-        console.log("Listening on port " + PORT);
-    });
+  await initDB();
+  app.listen(PORT, () => {
+    console.log("Listening on port " + PORT);
+  });
 }
 
 async function initDB() {
-    await sequelize.authenticate()
-        .then(async () => {
-            await User.sync();
-            await Favourite.sync();
-            await Organizer.sync();
-            await Event.sync();
+  await sequelize
+    .authenticate()
+    .then(async () => {
+      await User.sync();
+      await Favourite.sync();
+      await Organizer.sync();
+      await Event.sync();
+      await Ticket.sync();
+      await Tag.sync();
 
-            console.log("Model synced");
-        })
-        .catch(err => {
-            console.error(err);
-            process.exit();
-        })
+      console.log("Model synced");
+    })
+    .catch((err) => {
+      console.error(err);
+      process.exit();
+    });
 }
