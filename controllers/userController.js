@@ -1,4 +1,5 @@
 import User from "../models/user.js";
+import courseMap from "../utils/courseMap.js";
 const notFound = new Error("User not found");
 
 export async function getUser(req, res) {
@@ -26,17 +27,12 @@ export async function getUser(req, res) {
 }
 
 export async function setUser(req, res) {
-    const { uid, name, userclass: user, year, phone, email, password, otp = "0000" } = req.body;
+    const { uid, name, course, year, phone, email, password } = req.body;
     try {
         await User.create({
-            uid,
-            name,
-            year,
-            phone,
-            email,
-            password,
-            otp,
-            "class": user,
+            uid, name, year,
+            phone, email, password,
+            otp, course,
             otpTimestamp: Date.now()
         });
         res.sendStatus(201);
@@ -47,3 +43,84 @@ export async function setUser(req, res) {
     }
 }
 
+export async function signUp(req, res) {
+    const { uid, name, phone, email, password } = req.body;
+
+    const yearJoining = Math.floor(uid / 10000);        // 214005 / 10000 = 21.4005 ~ 21
+    const year = new Date();
+    year.setFullYear(2000 + yearJoining, 4, 30);
+
+    const courseNo = Math.floor(uid / 1000) % 10;         // 214005 / 1000 = 214.005 ~ 214 % 10 = 5
+    const course = courseMap[courseNo];
+
+    const otp = Math.floor(Math.random() * 1000000);        // 6 digit OTP
+    console.table({ uid, name, year, phone, email, password, otp, course, otpTimestamp: Date.now() });
+
+    try {
+        await User.create({
+            uid, name, year,
+            course, phone, email,
+            password, otp,
+            otpTimestamp: Date.now()
+        });
+        res.sendStatus(201);
+    }
+    catch (e) {
+        console.error(e);
+        if (e.name == "SequelizeUniqueConstraintError") {
+            res.status(400).send("Duplicate Entity");
+        }
+        else {
+            res.sendStatus(422);
+        }
+    }
+}
+
+export async function verifyOTP(req, res) {
+    const { otp } = req.body;
+    try {
+        const expiry = req.user.otpTimestamp;
+        expiry.setMinutes(expiry.getMinutes() + 2); // To-Do: check the minutes to expiry
+
+        if (Date.now() > expiry) {
+            res.status(410).send("OTP expired");
+            return;
+        }
+        if (otp == req.user.otp) res.sendStatus(200);
+        else res.sendStatus(401);
+    }
+    catch (e) {
+        console.error(e);
+        res.sendStatus(500);
+    }
+}
+
+export async function newOtp(req, res) {
+    const otp = Math.floor(Math.random() * 1000000);
+
+    req.user.otp = otp;
+    req.user.otpTimestamp = Date.now();
+
+    try {
+        await req.user.save();
+        res.sendStatus(200);
+    }
+    catch (e) {
+        console.error(e);
+        res.sendStatus(500);
+    }
+}
+
+export async function login(req, res){
+    const { password } = req.body;
+    if( !password ){
+        res.sendStatus(422);
+    }
+
+    if( password == req.user.password ){
+        res.sendStatus(200);
+    }
+    else{
+        res.status(401).send("Wrong password");
+    }
+}
