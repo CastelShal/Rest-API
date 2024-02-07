@@ -44,13 +44,29 @@ Event.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    participationJSON: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    eccPoints: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
     description: {
       type: DataTypes.TEXT,
       allowNull: true,
+    },
+    collaborator1: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      references: {
+        model: Organizer,
+        key: "orgDept",
+      },
+    },
+    collaborator2: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      references: {
+        model: Organizer,
+        key: "orgDept",
+      },
     },
   },
   { sequelize, timestamps: false }
