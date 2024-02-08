@@ -13,13 +13,12 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    class: {
+    course: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     year: {
-      //should be inferential? year of joining?
-      type: DataTypes.DATE, //date
+      type: DataTypes.DATE, 
       allowNull: false,
     },
     phone: {
