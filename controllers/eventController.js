@@ -1,6 +1,5 @@
-import Organizer from "../models/organiser";
-import Event from "../models/event";
-const orgNotFound = new Error("Organizer not found");
+import Organizer from "../models/organiser.js";
+import Event from "../models/event.js";
 const eventNotFound = new Error("Event not found");
 export async function getEventByDepartment(req, res) {
   try {
@@ -10,7 +9,7 @@ export async function getEventByDepartment(req, res) {
           model: Organizer,
           where: {
             department: {
-              [Sequelize.Op.iLike]: req.params.department,
+              [Sequelize.Op.regexp]: req.params.department,
             },
           },
         },
@@ -68,7 +67,7 @@ export async function deleteEvent(req, res) {
     res.status(200).json(event);
   } catch (e) {
     if (e == eventNotFound) {
-      console.log("No data for event name: " + req.params.eventName);
+      console.log("No data for event name: " + req.body.eventName);
       res.sendStatus(404);
     } else {
       console.log(e);

@@ -1,9 +1,10 @@
-import Organizer from "../models/organiser";
+import Organiser from "../models/organiser.js";
 const notFound = new Error("Organizer not found");
 
-export async function getOrganizer(req, res) {
+//retrieve the password and check for it
+export async function getOrganiser(req, res) {
   try {
-    const organiser = await Organizer.findOne({
+    const organiser = await Organiser.findOne({
       where: { orgEmail: req.params.email },
     });
     if (!organiser) {
