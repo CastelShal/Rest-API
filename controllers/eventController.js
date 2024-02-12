@@ -1,17 +1,11 @@
 import Organizer from "../models/organiser.js";
 import Event from "../models/event.js";
-import { Sequelize, Op } from "sequelize";
 const eventNotFound = new Error("Event not found");
 export async function getEventByDepartment(req, res) {
   try {
     const event = await Event.findAll({
       where: {
-        orgId: await getOrgId(req.params.department) /*await Organizer.findOne({
-            attributes: ["orgId"],
-            where: {
-              orgDept: req.params.department,
-            },
-          }).orgId,},*/,
+        orgId: await getOrgId(req.params.department)
       },
     });
     if (!event) {
@@ -25,7 +19,7 @@ export async function getEventByDepartment(req, res) {
       );
       res.sendStatus(404);
     } else {
-      console.log(e);
+      console.error(e);
       res.sendStatus(500);
     }
   }
@@ -33,17 +27,15 @@ export async function getEventByDepartment(req, res) {
 
 async function getOrgId(department) {
   try {
-    console.log(department);
     const dept = await Organizer.findOne({
       attributes: ["orgId"],
       where: {
         orgDept: department,
       },
     });
-    console.log(dept);
     return dept.orgId;
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 
@@ -51,7 +43,7 @@ export async function getEventByName(req, res) {
   try {
     const event = await Event.findAll({
       where: {
-        eventName: req.params.eventName.toLowerCase(),
+        eventName: req.params.eventName,
       },
     });
     if (!event) {
@@ -63,7 +55,7 @@ export async function getEventByName(req, res) {
       console.log("No data for event based on name: " + req.params.eventName);
       res.sendStatus(404);
     } else {
-      console.log(e);
+      console.error(e);
       res.sendStatus(500);
     }
   }
@@ -82,7 +74,7 @@ export async function deleteEvent(req, res) {
       console.log("No data for event name: " + req.body.eventName);
       res.sendStatus(404);
     } else {
-      console.log(e);
+      console.error(e);
       res.sendStatus(500);
     }
   }
@@ -91,7 +83,6 @@ export async function deleteEvent(req, res) {
 export async function getAllEvents(req, res) {
   try {
     const event = await Event.findAll();
-    console.log(event);
     if (!event) {
       throw eventNotFound;
     }
@@ -102,7 +93,7 @@ export async function getAllEvents(req, res) {
       console.log("No events found");
       res.sendStatus(404);
     } else {
-      console.log(e);
+      console.error(e);
       res.sendStatus(500);
     }
   }
@@ -110,35 +101,18 @@ export async function getAllEvents(req, res) {
 
 export async function setEvent(req, res) {
   const {
-    eventId,
-    orgId,
-    tagId,
-    eventName,
-    eventDateTime,
-    eventVenue,
-    maxCapacity,
-    eccPoints,
-    description,
-    collaborator1,
-    collaborator2,
-    url,
+    eventId, orgId, tagId,
+    eventName, eventDateTime, eventVenue,
+    maxCapacity, eccPoints, description,
+    collaborator1, collaborator2, url,
   } = req.body;
 
-  const lowercaseEventName = eventName.toLowerCase();
   try {
     await Event.create({
-      eventId,
-      orgId,
-      tagId,
-      eventName: lowercaseEventName,
-      eventDateTime,
-      eventVenue,
-      maxCapacity,
-      eccPoints,
-      description,
-      collaborator1,
-      collaborator2,
-      url,
+      eventId, orgId, tagId,
+      eventName, eventDateTime, eventVenue,
+      maxCapacity, eccPoints, description,
+      collaborator1, collaborator2, url,
     });
     res.sendStatus(201);
   } catch (e) {
