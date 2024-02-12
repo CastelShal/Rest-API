@@ -1,6 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../connect.js";
-import Tags from "./tags.js";
+import Tag from "./tags.js";
 import Organizer from "./organiser.js";
 
 class Event extends Model {}
@@ -24,7 +24,7 @@ Event.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: Tags,
+        model: Tag,
         key: "tagId",
       },
     },
@@ -44,12 +44,32 @@ Event.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    participationJSON: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    eccPoints: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
     description: {
       type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    collaborator1: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: Organizer,
+        key: "orgId",
+      },
+    },
+    collaborator2: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: Organizer,
+        key: "orgId",
+      },
+    },
+    url: {
+      type: DataTypes.STRING,
       allowNull: true,
     },
   },

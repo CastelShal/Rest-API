@@ -7,6 +7,8 @@ import BookedEvents from "./models/bookedEvents.js";
 
 import userRouter from "./routes/users.js";
 import bookEventsRouter from "./routes/bookedEvents.js";
+import organizerRouter from "./routes/organizer.js";
+import eventsRouter from "./routes/events.js";
 import Organizer from "./models/organiser.js";
 import Event from "./models/event.js";
 
@@ -20,6 +22,8 @@ app.use(express.urlencoded({ extended: true }));
 //router mounts
 app.use("/user", userRouter);
 app.use("/bookedEvents", bookEventsRouter);
+app.use("/organizer", organizerRouter);
+app.use("/events", eventsRouter);
 
 initialize();
 
@@ -35,8 +39,8 @@ async function initDB() {
     .authenticate()
     .then(async () => {
       await User.sync();
-      await Organizer.sync();
       await Tag.sync();
+      await Organizer.sync();
       await Event.sync();
       await BookedEvents.sync();
 
