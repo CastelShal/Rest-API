@@ -1,7 +1,7 @@
 export default {
   host: "localhost",
   user: "root",
-  password: "AdleenaLobo2024SE", // this is not the password, actually put your password
+  password: " ", // this is not the password, actually put your password
   db: "testdb",
   dialect: "mysql",
 

@@ -39,8 +39,8 @@ async function initDB() {
     .authenticate()
     .then(async () => {
       await User.sync();
-      await Organizer.sync();
       await Tag.sync();
+      await Organizer.sync();
       await Event.sync();
       await BookedEvents.sync();
 
