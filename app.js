@@ -1,4 +1,5 @@
 import express from "express";
+import upload from "./middleware/upload.js";
 
 import { sequelize } from "./connect.js";
 import Tag from "./models/tags.js";
@@ -16,6 +17,12 @@ const PORT = 3000;
 // middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use("/uploads", express.static('uploads'));
+app.post('/uploads', upload.single('image'), (req, res) => {
+  console.log(req.file, req.body);
+  res.sendStatus(418);
+});
 
 //router mounts
 app.use("/user", userRouter);
