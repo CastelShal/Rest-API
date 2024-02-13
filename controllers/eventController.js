@@ -1,6 +1,7 @@
 import Organizer from "../models/organiser.js";
 import Event from "../models/event.js";
 import { Sequelize, Op } from "sequelize";
+import { sequelize } from "../connect.js";
 const eventNotFound = new Error("Event not found");
 export async function getEventByDepartment(req, res) {
   try {
@@ -51,7 +52,13 @@ export async function getEventByName(req, res) {
   try {
     const event = await Event.findAll({
       where: {
-        eventName: req.params.eventName.toLowerCase(),
+        [Op.and]: [
+          sequelize.where(
+            sequelize.fn("lower", sequelize.col("eventName")),
+            req.params.eventName.toLowerCase()
+          ),
+        ],
+        //eventName: req.params.eventName.toLowerCase(),
       },
     });
     if (!event) {
@@ -124,13 +131,13 @@ export async function setEvent(req, res) {
     url,
   } = req.body;
 
-  const lowercaseEventName = eventName.toLowerCase();
+  //const lowercaseEventName = eventName.toLowerCase();
   try {
     await Event.create({
       eventId,
       orgId,
       tagId,
-      eventName: lowercaseEventName,
+      eventName, //: lowercaseEventName,
       eventDateTime,
       eventVenue,
       maxCapacity,
