@@ -1,5 +1,4 @@
 import express from "express";
-import bodyParser from "body-parser";
 import { sequelize } from "./connect.js";
 import Tag from "./models/tags.js";
 import User from "./models/user.js";
@@ -10,11 +9,9 @@ import organizerRouter from "./routes/organizer.js";
 import eventsRouter from "./routes/events.js";
 import Organizer from "./models/organiser.js";
 import Event from "./models/event.js";
-import Producer from "./producer.js";
 
 const app = express();
 const PORT = 3000;
-const producer = new Producer();
 
 // middleware
 app.use(express.json());
