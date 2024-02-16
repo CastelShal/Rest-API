@@ -1,5 +1,5 @@
 import amqplib from "amqplib";
-import config from "./config.js"
+import config from "../config.js";
 
 //step 1 : Connect to the rabbitmq server
 //step 2 : Create a new channel on that connection

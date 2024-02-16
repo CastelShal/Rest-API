@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //router mounts
-app.use("/user", userRouter);
+app.use("/users", userRouter);
 app.use("/bookedEvents", bookEventsRouter);
 app.use("/organizer", organizerRouter);
 app.use("/events", eventsRouter);
