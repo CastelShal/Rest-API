@@ -53,10 +53,9 @@ export async function getEventByName(req, res) {
     const event = await Event.findAll({
       where: {
         [Op.and]: [
-          sequelize.where(
-            sequelize.fn("lower", sequelize.col("eventName")),
-            req.params.eventName.toLowerCase()
-          ),
+          sequelize.where(sequelize.fn("lower", sequelize.col("eventName")), {
+            [Op.like]: `%${req.params.eventName.toLowerCase()}%`,
+          }),
         ],
         //eventName: req.params.eventName.toLowerCase(),
       },
