@@ -20,14 +20,6 @@ const producer = new Producer();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(bodyParser.json("application/json"));
-
-app.post("/sendMail", async (req, res, next) => {
-  await producer.publishMessage(req.body.mailType, req.body.to, req.body.subject, req.body.body);
-  res.send();
-});
-
-
 //router mounts
 app.use("/user", userRouter);
 app.use("/bookedEvents", bookEventsRouter);

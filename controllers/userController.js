@@ -1,6 +1,9 @@
 import User from "../models/user.js";
 import courseMap from "../utils/courseMap.js";
+import Producer from "../producer.js";
+
 const notFound = new Error("User not found");
+const producer = new Producer();
 
 export async function getUser(req, res) {
     try {
@@ -63,6 +66,15 @@ export async function signUp(req, res) {
             password, otp,
             otpTimestamp: Date.now()
         });
+
+        //mail sender request to mq broker
+        const mailSubject = "Sign-Up OTP";
+        const mailBody = `Hi $${name}!  
+        Your One Time Password for your signup is ${otp}.
+        Please do not share this otp with anyone else.
+        `;
+        await producer.publishMessage("otp", email, mailSubject, mailBody );
+
         res.sendStatus(201);
     }
     catch (e) {
