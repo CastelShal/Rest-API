@@ -18,15 +18,17 @@ const PORT = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/uploads", express.static('uploads'));
-app.post('/uploads', upload.single('image'), (req, res) => {
-  console.log(req.file, req.body);
-  res.sendStatus(418);
-});
 
 //router mounts
+app.use("/uploads", express.static('uploads'));
 app.use("/user", userRouter);
 app.use("/bookedEvents", bookEventsRouter);
+
+// file upload handler
+app.post('/uploads', upload.single('image'), (req, res) => {
+  // console.log(req.file, req.body);
+  res.sendStatus(201);
+});
 
 initialize();
 
