@@ -1,11 +1,13 @@
 import Organizer from "../models/organiser.js";
 import Event from "../models/event.js";
+import { sequelize, Op } from "sequelize";
+
 const eventNotFound = new Error("Event not found");
 export async function getEventByDepartment(req, res) {
   try {
     const event = await Event.findAll({
       where: {
-        orgId: await getOrgId(req.params.department)
+        orgId: await getOrgId(req.params.department),
       },
     });
     if (!event) {
@@ -43,7 +45,11 @@ export async function getEventByName(req, res) {
   try {
     const event = await Event.findAll({
       where: {
-        eventName: req.params.eventName,
+        [Op.and]: [
+          sequelize.where(sequelize.fn("lower", sequelize.col("eventName")), {
+            [Op.like]: `%${req.params.eventName.toLowerCase()}%`,
+          }),
+        ],
       },
     });
     if (!event) {
@@ -101,18 +107,34 @@ export async function getAllEvents(req, res) {
 
 export async function setEvent(req, res) {
   const {
-    eventId, orgId, tagId,
-    eventName, eventDateTime, eventVenue,
-    maxCapacity, eccPoints, description,
-    collaborator1, collaborator2, url,
+    eventId,
+    orgId,
+    tagId,
+    eventName,
+    eventDateTime,
+    eventVenue,
+    maxCapacity,
+    eccPoints,
+    description,
+    collaborator1,
+    collaborator2,
+    url,
   } = req.body;
 
   try {
     await Event.create({
-      eventId, orgId, tagId,
-      eventName, eventDateTime, eventVenue,
-      maxCapacity, eccPoints, description,
-      collaborator1, collaborator2, url,
+      eventId,
+      orgId,
+      tagId,
+      eventName,
+      eventDateTime,
+      eventVenue,
+      maxCapacity,
+      eccPoints,
+      description,
+      collaborator1,
+      collaborator2,
+      url,
     });
     res.sendStatus(201);
   } catch (e) {
