@@ -13,8 +13,9 @@ export const sequelize = new Sequelize(
     logging: false,
   }
 );
-
-/*export const sequelize = new Sequelize({
+/*
+export const sequelize = new Sequelize({
   dialect: "sqlite",
   storage: "database.sqlite",
-});*/
+});
+*/
