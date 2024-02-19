@@ -55,7 +55,7 @@ User.init(
       allowNull: true,
     },
   },
-  { sequelize, timestamps: false }
+  { sequelize, modelName: "users", timestamps: false }
 );
 
 export default User;

@@ -23,7 +23,7 @@ export async function getBookedEvents(req, res) {
 export async function setBookedEvents(req, res) {
   const data = req.body;
   try {
-    await Favourite.create({
+    await BookedEvents.create({
       orgId: data.orgId,
       uid: data.uid,
     });

@@ -73,7 +73,7 @@ Event.init(
       allowNull: true,
     },
   },
-  { sequelize, timestamps: false }
+  { sequelize, modelName: "events", timestamps: false }
 );
 
 export default Event;
