@@ -1,6 +1,7 @@
 import User from "../models/user.js";
 import courseMap from "../utils/courseMap.js";
 import Producer from "../utils/producer.js";
+import startPublisher from "../utils/publisher.js";     
 
 const notFound = new Error("User not found");
 const producer = new Producer();
@@ -73,8 +74,9 @@ export async function signUp(req, res) {
         Your One Time Password for your signup is ${otp}.
         Please do not share this otp with anyone else.
         `;
-        await producer.publishMessage("otp", email, mailSubject, mailBody );
-
+        //await producer.publishMessage("otp", email, mailSubject, mailBody );
+        
+        await startPublisher("otp", email, mailSubject, mailBody);
         res.sendStatus(201);
     }
     catch (e) {
