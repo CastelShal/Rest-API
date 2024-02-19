@@ -1,6 +1,7 @@
 import User from "../models/user.js";
 import courseMap from "../utils/courseMap.js";
 import Producer from "../utils/producer.js";
+import startPublisher from "../utils/publisher.js";     
 
 const notFound = new Error("User not found");
 const producer = new Producer();
