@@ -1,6 +1,6 @@
 import Organizer from "../models/organiser.js";
 import Event from "../models/event.js";
-import { Sequelize, Op } from "sequelize";
+import { Op } from "sequelize";
 
 const eventNotFound = new Error("Event not found");
 export async function getEventByDepartment(req, res) {
