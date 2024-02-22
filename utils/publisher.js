@@ -18,12 +18,12 @@ export default async function startPublisher(routingKey, email, subject, body) {
     await channel.queueBind('email.otp', 'email', 'otp')
 
     //Publish a message to the exchange
-    async function sendToQueue(routingKey, email, name, body) {
+    async function sendToQueue(routingKey, email, subjec, body) {
       const message = { email, subject, body }
       const jsonMessage = JSON.stringify(message);
 
         //amqp-client function expects: publish(exchange, routingKey, message, options)
-        await q.publish('email', { routingKey }, jsonMessage)
+        await q.publish(jsonMessage, { routingKey })
         console.log("[📥] Message sent to queue", message)
     }
 
