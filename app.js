@@ -1,6 +1,8 @@
 import express from "express";
 import upload from "./middleware/upload.js";
 import { sequelize } from "./connect.js";
+import cors from 'cors'
+
 import Tag from "./models/tags.js";
 import User from "./models/user.js";
 import BookedEvents from "./models/bookedEvents.js";
@@ -15,6 +17,7 @@ const app = express();
 const PORT = 3000;
 
 // middleware
+app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.post('/uploads', upload.single('image'), (req, res) => {
