@@ -6,10 +6,10 @@ import User from "../models/user.js";
  */
 export async function fetchUser(req, res, next) {
     let id;
-    if (req.method == "GET") {
+    if (req.method == "GET" || req.method == "DELETE") {
         id = req.params.id
     }
-    else if (req.method == "POST") {
+    else if (req.method == "POST" || req.method == "PUT") {
         id = req.body.uid;
     }
     else {
@@ -18,7 +18,7 @@ export async function fetchUser(req, res, next) {
     }
 
     try {
-        const user = await User.findByPk(id);
+        const user = await User.findByPk(parseInt(id));
         if (!user) {
             res.sendStatus(404);
             return;

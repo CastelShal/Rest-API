@@ -56,7 +56,7 @@ export async function signUp(req, res) {
     const courseNo = Math.floor(uid / 1000) % 10;         // 214005 / 1000 = 214.005 ~ 214 % 10 = 5
     const course = courseMap[courseNo];
 
-    const otp = Math.floor(Math.random() * 1000000);        // 6 digit OTP
+    const otp = Math.floor((Math.random() * 900000) + 100000);        // 6 digit OTP between 100000 and 1000000
     console.table({ uid, name, year, phone, email, password, otp, course, otpTimestamp: Date.now() });
 
     try {
@@ -68,12 +68,12 @@ export async function signUp(req, res) {
         });
 
         //mail sender request to mq broker
-        const mailSubject = "Sign-Up OTP";
-        const mailBody = `Hi ${name}!  
-        Your One Time Password for your signup is ${otp}.
-        Please do not share this otp with anyone else.
-        `;
-        await producer.publishMessage("otp", email, mailSubject, mailBody );
+        // const mailSubject = "Sign-Up OTP";
+        // const mailBody = `Hi ${name}!  
+        // Your One Time Password for your signup is ${otp}.
+        // Please do not share this otp with anyone else.
+        // `;
+        // await producer.publishMessage("otp", email, mailSubject, mailBody );
 
         res.sendStatus(201);
     }
@@ -92,8 +92,9 @@ export async function verifyOTP(req, res) {
     const { otp } = req.body;
     try {
         const expiry = req.user.otpTimestamp;
+        console.log("b4 " + expiry.toDateString());
         expiry.setMinutes(expiry.getMinutes() + 2); // To-Do: check the minutes to expiry
-
+        console.log("fter" + expiry.toDateString());
         if (Date.now() > expiry) {
             res.status(410).send("OTP expired");
             return;
@@ -108,13 +109,14 @@ export async function verifyOTP(req, res) {
 }
 
 export async function newOtp(req, res) {
-    const otp = Math.floor(Math.random() * 1000000);
+    const otp = Math.floor((Math.random() * 900000) + 100000); 
 
     req.user.otp = otp;
     req.user.otpTimestamp = Date.now();
 
     try {
         await req.user.save();
+        console.log(otp);
         res.sendStatus(200);
     }
     catch (e) {
@@ -134,5 +136,20 @@ export async function login(req, res){
     }
     else{
         res.status(401).send("Wrong password");
+    }
+}
+
+export async function updateUser(req, res){
+    const user = req.user;
+    const { name, phone, email, password } = req.body;
+
+    try{
+        user.update({ name, phone, email, password });
+        res.sendStatus(201);
+    }
+    catch(e){
+        console
+        .error(e);
+        res.sendStatus(500);
     }
 }
