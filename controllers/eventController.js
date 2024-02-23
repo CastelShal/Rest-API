@@ -1,8 +1,8 @@
-import Organizer from "../models/organiser.js";
+import Organizer from "../models/organizer.js";
 import Event from "../models/event.js";
 import { Op } from "sequelize";
+import { sequelize } from "../connect.js";
 
-const eventNotFound = new Error("Event not found");
 export async function getEventByDepartment(req, res) {
   try {
     const event = await Event.findAll({
@@ -10,20 +10,10 @@ export async function getEventByDepartment(req, res) {
         orgId: await getOrgId(req.params.department),
       },
     });
-    if (!event) {
-      throw eventNotFound;
-    }
     res.status(200).json(event);
   } catch (e) {
-    if (e == eventNotFound) {
-      console.log(
-        "No data for event based on department: " + req.params.department
-      );
-      res.sendStatus(404);
-    } else {
       console.error(e);
       res.sendStatus(500);
-    }
   }
 }
 
@@ -52,18 +42,10 @@ export async function getEventByName(req, res) {
         ],
       },
     });
-    if (!event) {
-      throw eventNotFound;
-    }
     res.status(200).json(event);
   } catch (e) {
-    if (e == eventNotFound) {
-      console.log("No data for event based on name: " + req.params.eventName);
-      res.sendStatus(404);
-    } else {
       console.error(e);
       res.sendStatus(500);
-    }
   }
 }
 
@@ -76,32 +58,18 @@ export async function deleteEvent(req, res) {
     });
     res.sendStatus(200);
   } catch (e) {
-    if (e == eventNotFound) {
-      console.log("No data for event name: " + req.body.eventName);
-      res.sendStatus(404);
-    } else {
       console.error(e);
       res.sendStatus(500);
-    }
   }
 }
 
 export async function getAllEvents(req, res) {
   try {
     const event = await Event.findAll();
-    if (!event) {
-      throw eventNotFound;
-    }
-
     res.status(200).json(event);
   } catch (e) {
-    if (e === eventNotFound) {
-      console.log("No events found");
-      res.sendStatus(404);
-    } else {
       console.error(e);
       res.sendStatus(500);
-    }
   }
 }
 

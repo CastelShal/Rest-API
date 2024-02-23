@@ -1,7 +1,8 @@
 import express from "express";
-import { getOrganiser } from "../controllers/organiserController.js";
+import { getAllOrgs, getOrganizer } from "../controllers/organizerController.js";
 
 const router = express.Router();
-router.get("/:email", getOrganiser); // /:id is a parameter that will be filled in by the Express framework
+router.get("/getAll", getAllOrgs);
+router.get("/:email", getOrganizer);
 
 export default router;

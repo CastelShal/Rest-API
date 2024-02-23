@@ -5,12 +5,12 @@ import cors from 'cors'
 
 import Tag from "./models/tags.js";
 import User from "./models/user.js";
-import BookedEvents from "./models/bookedEvents.js";
+import BookedEvents from "./models/bookedEvent.js";
 import userRouter from "./routes/users.js";
 import bookEventsRouter from "./routes/bookedEvents.js";
 import organizerRouter from "./routes/organizer.js";
 import eventsRouter from "./routes/events.js";
-import Organizer from "./models/organiser.js";
+import Organizer from "./models/organizer.js";
 import Event from "./models/event.js";
 
 const app = express();
@@ -21,15 +21,14 @@ app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.post('/uploads', upload.single('image'), (req, res) => {
-  // console.log(req.file, req.body);
-  res.sendStatus(201);
+  res.status(201).send(req.filePath);
 });
 
 //router mounts
 app.use("/uploads", express.static('uploads'));
 app.use("/users", userRouter);
 app.use("/bookedEvents", bookEventsRouter);
-app.use("/organizer", organizerRouter);
+app.use("/organizers", organizerRouter);
 app.use("/events", eventsRouter);
 
 initialize();

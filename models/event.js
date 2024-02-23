@@ -1,7 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../connect.js";
 import Tag from "./tags.js";
-import Organizer from "./organiser.js";
+import Organizer from "./organizer.js";
 
 class Event extends Model {}
 
