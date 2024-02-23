@@ -1,4 +1,4 @@
-import BookedEvents from "../models/bookedEvents.js";
+import BookedEvents from "../models/bookedEvent.js";
 
 export async function getBookedEvents(req, res) {
   const userid = req.params.id;
@@ -6,13 +6,13 @@ export async function getBookedEvents(req, res) {
     if (!userid) throw new Error("uid not passed");
 
     const obj = await BookedEvents.findAll({
-      attributes: ["orgId"],
+      attributes: ["eventId"],
       where: {
         uid: userid,
       },
     });
 
-    const events = obj.map((v) => v.orgId);
+    const events = obj.map((v) => v.eventId);
     res.status(200).json({ events });
   } catch (e) {
     console.error(e);
@@ -24,7 +24,7 @@ export async function setBookedEvents(req, res) {
   const data = req.body;
   try {
     await BookedEvents.create({
-      orgId: data.orgId,
+      eventId: data.eventId,
       uid: data.uid,
     });
     res.sendStatus(200);
