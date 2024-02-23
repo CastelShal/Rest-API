@@ -1,10 +1,9 @@
 import User from "../models/user.js";
 import courseMap from "../utils/courseMap.js";
-import Producer from "../utils/producer.js";
 import startPublisher from "../utils/publisher.js";     
+import send_mail from "../utils/transporter.js"; 
 
 const notFound = new Error("User not found");
-const producer = new Producer();
 
 export async function getUser(req, res) {
     try {
@@ -69,12 +68,20 @@ export async function signUp(req, res) {
         });
 
         //mail sender request to mq broker
-        // const mailSubject = "Sign-Up OTP";
-        // const mailBody = `Hi ${name}!  
-        // Your One Time Password for your signup is ${otp}.
-        // Please do not share this otp with anyone else.
-        // `;
-        // await producer.publishMessage("otp", email, mailSubject, mailBody );
+        const mailSubject = "Sign-Up OTP";
+        const mailBody = `Hi ${name}!  
+        Your One-Time Password for BookMyEvent is ${otp}.
+        ${otpTimestamp}
+        OTP will expire in 2 minutes.
+        Please do not share this otp with anyone else.
+        `;
+        //await producer.publishMessage("otp", email, mailSubject, mailBody );
+        if(process.env.CLOUDAMQP_URL==""){
+            await send_mail(email, mailBody, mailSubject)
+        }
+        else {
+            await startPublisher("otp", email, mailSubject, mailBody);
+        }
 
         res.sendStatus(201);
     }
