@@ -7,14 +7,14 @@ export async function getBookedEvents(req, res) {
   try {
     if (!userid) throw new Error("uid not passed");
 
-    const obj = await BookedEvents.findAll({
-      include: {model: Event},
+    const events = await BookedEvents.findAll({
+      include: { model: Event },
       where: {
         uid: userid,
       },
     });
 
-    res.status(200).json({ obj });
+    res.status(200).json({ events });
   } catch (e) {
     console.error(e);
     res.sendStatus(422);
@@ -25,8 +25,11 @@ export async function setBookedEvents(req, res) {
   const data = req.body;
   try {
     const [user, status] = await BookedEvents.findOrCreate({
-      eventId: data.eventId,
-      uid: data.uid,
+      where: { uid: data.uid, eventId: data.eventId },
+      defaults: {
+        eventId: parseInt(data.eventId),
+        uid: parseInt(data.uid)
+      }
     });
     res.sendStatus(200);
   } catch (e) {
