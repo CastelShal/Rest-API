@@ -8,11 +8,11 @@ export async function getOrganizer(req, res) {
     const organiser = await Organiser.findOne({
       where: { orgEmail: req.params.email },
     });
-    const {orgId, orgName, orgDept, orgEmail} = organiser;
+    const { orgId, orgName, orgDept, orgEmail } = organiser;
     if (!organiser) {
       throw notFound;
     }
-    res.status(200).json({orgId, orgName, orgDept, orgEmail});
+    res.status(200).json({ orgId, orgName, orgDept, orgEmail });
   } catch (e) {
     if (e === notFound) {
       console.log("No data found for organizer email: " + req.params.email);
@@ -30,7 +30,36 @@ export async function getAllOrgs(req, res) {
     const event = await Organizer.findAll();
     res.status(200).json(event);
   } catch (e) {
-      console.error(e);
-      res.sendStatus(500);
+    console.error(e);
+    res.sendStatus(500);
   }
+}
+
+export async function login(req, res) {
+  const { email, password } = req.body;
+  if (!password) {
+    res.sendStatus(422);
+    return;
+  }
+  try {
+    const org = await Organiser.findOne({
+      where: {
+        orgEmail: email,
+      }
+    });
+    
+    console.log(org.password);
+    if (password == org.orgPass) {
+      res.sendStatus(200);
+      return;
+    }
+    else {
+      res.status(401).send("Wrong password");
+    }
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+
+
 }
