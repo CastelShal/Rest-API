@@ -6,14 +6,18 @@ import { sequelize } from "../connect.js";
 export async function getEventByDepartment(req, res) {
   try {
     const event = await Event.findAll({
+      include: [
+        { model: Organizer, as: "organizer"},
+        {model: Organizer, as: "collaborator"}
+      ],
       where: {
         orgId: await getOrgId(req.params.department),
       },
     });
     res.status(200).json(event);
   } catch (e) {
-      console.error(e);
-      res.sendStatus(500);
+    console.error(e);
+    res.sendStatus(500);
   }
 }
 
@@ -34,6 +38,10 @@ async function getOrgId(department) {
 export async function getEventByName(req, res) {
   try {
     const event = await Event.findAll({
+      include: [
+        { model: Organizer, as: "organizer"},
+        {model: Organizer, as: "collaborator"}
+      ],
       where: {
         [Op.and]: [
           sequelize.where(sequelize.fn("lower", sequelize.col("eventName")), {
@@ -44,8 +52,8 @@ export async function getEventByName(req, res) {
     });
     res.status(200).json(event);
   } catch (e) {
-      console.error(e);
-      res.sendStatus(500);
+    console.error(e);
+    res.sendStatus(500);
   }
 }
 
@@ -58,18 +66,23 @@ export async function deleteEvent(req, res) {
     });
     res.sendStatus(200);
   } catch (e) {
-      console.error(e);
-      res.sendStatus(500);
+    console.error(e);
+    res.sendStatus(500);
   }
 }
 
 export async function getAllEvents(req, res) {
   try {
-    const event = await Event.findAll();
+    const event = await Event.findAll({
+      include: [
+        { model: Organizer, as: "organizer"},
+        {model: Organizer, as: "collaborator"}
+      ]
+    });
     res.status(200).json(event);
   } catch (e) {
-      console.error(e);
-      res.sendStatus(500);
+    console.error(e);
+    res.sendStatus(500);
   }
 }
 

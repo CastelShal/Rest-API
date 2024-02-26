@@ -1,4 +1,6 @@
+import { Model } from "sequelize";
 import BookedEvents from "../models/bookedEvent.js";
+import Event from "../models/event.js";
 
 export async function getBookedEvents(req, res) {
   const userid = req.params.id;
@@ -6,14 +8,13 @@ export async function getBookedEvents(req, res) {
     if (!userid) throw new Error("uid not passed");
 
     const obj = await BookedEvents.findAll({
-      attributes: ["eventId"],
+      include: {model: Event},
       where: {
         uid: userid,
       },
     });
 
-    const events = obj.map((v) => v.eventId);
-    res.status(200).json({ events });
+    res.status(200).json({ obj });
   } catch (e) {
     console.error(e);
     res.sendStatus(422);
@@ -23,7 +24,7 @@ export async function getBookedEvents(req, res) {
 export async function setBookedEvents(req, res) {
   const data = req.body;
   try {
-    await BookedEvents.create({
+    const [user, status] = await BookedEvents.findOrCreate({
       eventId: data.eventId,
       uid: data.uid,
     });
