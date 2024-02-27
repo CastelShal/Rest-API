@@ -27,8 +27,14 @@ export async function getOrganizer(req, res) {
 
 export async function getAllOrgs(req, res) {
   try {
-    const event = await Organizer.findAll();
-    res.status(200).json(event);
+    const organizers = await Organizer.findAll();
+    const orgArray = [];
+    organizers.forEach(org => {
+      const { orgId, orgName, orgDept, orgEmail } = org;
+      orgArray.push({ orgId, orgName, orgDept, orgEmail });
+    })
+
+    res.status(200).json(orgArray);
   } catch (e) {
     console.error(e);
     res.sendStatus(500);
@@ -48,7 +54,6 @@ export async function login(req, res) {
       }
     });
     
-    console.log(org.password);
     if (password == org.orgPass) {
       res.sendStatus(200);
       return;
