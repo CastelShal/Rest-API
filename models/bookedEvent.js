@@ -23,7 +23,8 @@ BookedEvents.init(
       },
     },
   },
-  { sequelize, modelName: "bookedEvents", timestamps: false }
+  { sequelize, modelName: "booked_events", timestamps: false }
 );
+BookedEvents.belongsTo(Event, { foreignKey: { field: "eventId" }});
 
 export default BookedEvents;

@@ -36,7 +36,7 @@ Organizer.init(
       },
     },
   },
-  { sequelize, timestamps: false }
+  { sequelize, modelName: "organizers", timestamps: false }
 );
 
 export default Organizer;

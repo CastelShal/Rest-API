@@ -1,18 +1,19 @@
-import BookedEvents from "../models/bookedEvents.js";
+import { Model } from "sequelize";
+import BookedEvents from "../models/bookedEvent.js";
+import Event from "../models/event.js";
 
 export async function getBookedEvents(req, res) {
   const userid = req.params.id;
   try {
     if (!userid) throw new Error("uid not passed");
 
-    const obj = await BookedEvents.findAll({
-      attributes: ["orgId"],
+    const events = await BookedEvents.findAll({
+      include: { model: Event },
       where: {
         uid: userid,
       },
     });
 
-    const events = obj.map((v) => v.orgId);
     res.status(200).json({ events });
   } catch (e) {
     console.error(e);
@@ -23,9 +24,12 @@ export async function getBookedEvents(req, res) {
 export async function setBookedEvents(req, res) {
   const data = req.body;
   try {
-    await Favourite.create({
-      orgId: data.orgId,
-      uid: data.uid,
+    const [user, status] = await BookedEvents.findOrCreate({
+      where: { uid: data.uid, eventId: data.eventId },
+      defaults: {
+        eventId: parseInt(data.eventId),
+        uid: parseInt(data.uid)
+      }
     });
     res.sendStatus(200);
   } catch (e) {
