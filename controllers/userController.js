@@ -71,11 +71,10 @@ export async function signUp(req, res) {
         const mailSubject = "Sign-Up OTP";
         const mailBody = `Hi ${name}!  
         Your One-Time Password for BookMyEvent is ${otp}.
-        ${otpTimestamp}
         OTP will expire in 2 minutes.
         Please do not share this otp with anyone else.
         `;
-        //await producer.publishMessage("otp", email, mailSubject, mailBody );
+      
         if(process.env.CLOUDAMQP_URL==""){
             await send_mail(email, mailBody, mailSubject)
         }
@@ -100,7 +99,7 @@ export async function verifyOTP(req, res) {
     const { otp } = req.body;
     try {
         const expiry = req.user.otpTimestamp;
-        expiry.setMinutes(expiry.getMinutes() + 2); // To-Do: check the minutes to expiry
+        expiry.setMinutes(expiry.getMinutes() + 2); // TODO: check the minutes to expiry
         if (Date.now() > expiry) {
             res.status(410).send("OTP expired");
             return;
@@ -163,3 +162,4 @@ export async function updateUser(req, res){
         res.sendStatus(500);
     }
 }
+
