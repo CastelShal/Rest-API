@@ -75,5 +75,6 @@ Event.init(
   },
   { sequelize, modelName: "events", timestamps: false }
 );
-
+Event.belongsTo(Organizer, { foreignKey: { field: "orgId" }, as: "organizer" });
+Event.belongsTo(Organizer, { foreignKey: { field: "collaborator1" }, as: "collaborator" })
 export default Event;
