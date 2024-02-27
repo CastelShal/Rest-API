@@ -17,4 +17,10 @@ export default {
     exchangeName: "mailExchange",
   },
 
+  mail: {
+    user: 'stormerselite@gmail.com',
+    pass: process.env.APP_PASS, 
+    from: 'BookMyEvent <youremail@gmail.com>'
+  },
+
 };
