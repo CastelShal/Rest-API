@@ -34,7 +34,7 @@ export default async function startPublisher(routingKey, email, subject, body) {
       //Close the connection
       connection.close()
       console.log("[❎] Connection closed")
-      process.exit(0)
+      // process.exit(0)
     }, 500);
   } catch (error) {
     console.error(error)
