@@ -3,6 +3,8 @@ import Event from "../models/event.js";
 import { Op } from "sequelize";
 import { sequelize } from "../connect.js";
 import BookedEvents from "../models/bookedEvent.js"
+import User from "../models/user.js";
+import { convertToCSV } from "../utils/convertCsv.js";
 
 export async function getEventByDepartment(req, res) {
   try {
@@ -90,7 +92,15 @@ export async function getAllEvents(req, res) {
       include: [
         { model: Organizer, as: "organizer" },
         { model: Organizer, as: "collaborator" }
-      ]
+      ],
+      where: {
+        eventDateTime: {[Op.gte]: (() => {
+          const now = new Date(Date.now());
+          now.setHours(0);
+          now.setMinutes(0);
+          return now;
+        })()}
+      }
     });
     res.status(200).json(event);
   } catch (e) {
@@ -154,6 +164,36 @@ export async function updateEvent(req, res) {
     res.sendStatus(200);
   }
   catch (e) {
+    console.error(e);
+    res.sendStatus(500);
+  }
+}
+
+export async function downloadLogs(req, res){
+  const eventId = req.params.id;
+  try {
+    const events = await BookedEvents.findAll({
+      where: {
+        eventId
+      }
+    });
+    const uids = events.map(ev => ev.uid);
+    const users = await User.findAll({
+      where: {
+        uid: uids
+      }
+    });
+    const data = users.map(ev => ({
+      uid:ev.uid, name: ev.name, course: ev.course, 
+      year: new Date(ev.year).getFullYear(), 
+      email: ev.email
+    }));
+    if(!data){
+      return res.sendStatus(410); //theres no users for this event
+    }
+    convertToCSV(eventId, data);
+    res.sendStatus(200);
+  } catch (e) {
     console.error(e);
     res.sendStatus(500);
   }
