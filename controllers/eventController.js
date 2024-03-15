@@ -109,6 +109,30 @@ export async function getAllEvents(req, res) {
   }
 }
 
+export async function getPastEvents(req, res) {
+  try {
+    const event = await Event.findAll({
+      include: [
+        { model: Organizer, as: "organizer" },
+        { model: Organizer, as: "collaborator" }
+      ],
+      where: {
+        orgId: await getOrgId(req.params.department),
+        eventDateTime: {[Op.lte]: (() => {
+          const now = new Date(Date.now());
+          now.setHours(0);
+          now.setMinutes(0);
+          return now;
+        })()}
+      }
+    });
+    res.status(200).json(event);
+  } catch (e) {
+    console.error(e);
+    res.sendStatus(500);
+  }
+}
+
 export async function setEvent(req, res) {
   const {
     eventId,
