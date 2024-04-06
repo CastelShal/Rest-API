@@ -1,7 +1,7 @@
 import User from "../models/user.js";
 import courseMap from "../utils/courseMap.js";
-import startPublisher from "../utils/publisher.js";     
-import send_mail from "../utils/transporter.js"; 
+import startPublisher from "../utils/publisher.js";
+import send_mail from "../utils/transporter.js";
 
 const notFound = new Error("User not found");
 
@@ -74,7 +74,7 @@ export async function signUp(req, res) {
         OTP will expire in 2 minutes.
         Please do not share this otp with anyone else.
         `;
-      
+
         if(process.env.CLOUDAMQP_URL==""){
             await send_mail(email, mailBody, mailSubject)
         }
@@ -118,13 +118,28 @@ export async function verifyOTP(req, res) {
 }
 
 export async function newOtp(req, res) {
-    const otp = Math.floor((Math.random() * 900000) + 100000); 
-
+    const otp = Math.floor((Math.random() * 900000) + 100000);
+    const name = req.user.name;
+    const email = req.user.email;
     req.user.otp = otp;
     req.user.otpTimestamp = Date.now();
 
     try {
         await req.user.save();
+        //mail sender request to mq broker
+        const mailSubject = "Sign-Up OTP";
+        const mailBody = `Hi ${name}!  
+                Your One-Time Password for BookMyEvent is ${otp}.
+                OTP will expire in 2 minutes.
+                Please do not share this otp with anyone else.
+                `;
+
+        if (process.env.CLOUDAMQP_URL == "") {
+            await send_mail(email, mailBody, mailSubject)
+        }
+        else {
+            await startPublisher("otp", email, mailSubject, mailBody);
+        }
         console.log(otp);
         res.sendStatus(200);
     }
@@ -158,7 +173,7 @@ export async function updateUser(req, res){
     }
     catch(e){
         console
-        .error(e);
+            .error(e);
         res.sendStatus(500);
     }
 }
