@@ -137,7 +137,6 @@ export async function setEvent(req, res) {
   const {
     eventId,
     orgId,
-    tagId,
     eventName,
     eventDateTime,
     eventVenue,
@@ -153,7 +152,6 @@ export async function setEvent(req, res) {
     await Event.create({
       eventId,
       orgId,
-      tagId,
       eventName,
       eventDateTime,
       eventVenue,

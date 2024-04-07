@@ -1,3 +1,4 @@
+// Keeping this here for future purposes
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../connect.js";
 

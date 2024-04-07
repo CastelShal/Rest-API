@@ -92,14 +92,16 @@ export async function verifyOTP(req, res) {
     const { otp } = req.body;
     try {
         const expiry = req.user.otpTimestamp;
-        console.log("b4 " + expiry.toDateString());
         expiry.setMinutes(expiry.getMinutes() + 2); // To-Do: check the minutes to expiry
-        console.log("fter" + expiry.toDateString());
         if (Date.now() > expiry) {
             res.status(410).send("OTP expired");
             return;
         }
-        if (otp == req.user.otp) res.sendStatus(200);
+        if (otp == req.user.otp) {
+            res.sendStatus(200); 
+            req.user.otp = 0; 
+            req.user.save();
+        }
         else res.sendStatus(401);
     }
     catch (e) {
@@ -131,7 +133,7 @@ export async function login(req, res){
         res.sendStatus(422);
     }
 
-    if( password == req.user.password ){
+    if( password == req.user.password && req.user.otp == 0){
         res.sendStatus(200);
     }
     else{
