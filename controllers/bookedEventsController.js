@@ -1,4 +1,4 @@
-import { Model } from "sequelize";
+
 import BookedEvents from "../models/bookedEvent.js";
 import Event from "../models/event.js";
 

@@ -1,5 +1,4 @@
 import Organizer from "../models/organizer.js";
-import Organiser from "../models/organizer.js";
 const notFound = new Error("Organizer not found");
 
 //retrieve the password and check for it

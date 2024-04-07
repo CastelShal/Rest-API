@@ -3,7 +3,6 @@ import upload from "./middleware/upload.js";
 import { sequelize } from "./connect.js";
 import cors from 'cors'
 
-import Tag from "./models/tags.js";
 import User from "./models/user.js";
 import BookedEvents from "./models/bookedEvent.js";
 import userRouter from "./routes/users.js";
@@ -45,7 +44,6 @@ async function initDB() {
     .authenticate()
     .then(async () => {
       await User.sync();
-      await Tag.sync();
       await Organizer.sync();
       await Event.sync();
       await BookedEvents.sync();

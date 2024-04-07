@@ -1,6 +1,5 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../connect.js";
-import Tag from "./tags.js";
 import Organizer from "./organizer.js";
 
 class Event extends Model {}
@@ -20,14 +19,14 @@ Event.init(
         key: "orgId",
       },
     },
-    tagId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: Tag,
-        key: "tagId",
-      },
-    },
+    // tagId: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    //   references: {
+    //     model: Tag,
+    //     key: "tagId",
+    //   },
+    // },
     eventName: {
       type: DataTypes.STRING,
       allowNull: false,
