@@ -10,10 +10,6 @@ Organizer.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    orgName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     orgDept: {
       type: DataTypes.STRING,
       allowNull: false,
