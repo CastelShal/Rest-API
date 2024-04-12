@@ -4,7 +4,7 @@ const notFound = new Error("Organizer not found");
 //retrieve the password and check for it
 export async function getOrganizer(req, res) {
   try {
-    const organiser = await Organiser.findOne({
+    const organiser = await Organizer.findOne({
       where: { orgEmail: req.params.email },
     });
     const { orgId, orgName, orgDept, orgEmail } = organiser;
@@ -47,7 +47,7 @@ export async function login(req, res) {
     return;
   }
   try {
-    const org = await Organiser.findOne({
+    const org = await Organizer.findOne({
       where: {
         orgEmail: email,
       }
