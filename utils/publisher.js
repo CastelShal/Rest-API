@@ -18,7 +18,7 @@ export default async function startPublisher(routingKey, email, subject, body) {
     await channel.queueBind('email.otp', 'email', 'otp')
 
     //Publish a message to the exchange
-    async function sendToQueue(routingKey, email, subjec, body) {
+    async function sendToQueue(routingKey, email, subject, body) {
       const message = { email, subject, body }
       const jsonMessage = JSON.stringify(message);
 
